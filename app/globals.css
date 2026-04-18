@@ -39,6 +39,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-ko-red: var(--ko-red);
+  --color-ko-red-hover: var(--ko-red-hover);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +83,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* KO Boxing Club Brand */
+  --ko-red: #c11737;
+  --ko-red-hover: color-mix(in srgb, var(--ko-red) 88%, black);
 }
 
 .dark {
