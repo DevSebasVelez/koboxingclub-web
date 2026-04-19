@@ -6,9 +6,15 @@ import ContactMap from "@/components/sections/contact/ContactMap";
 import ContactCTA from "@/components/sections/contact/ContactCTA";
 
 export const metadata: Metadata = {
-  title: "Contacto | KO Boxing Club — Cuenca, Ecuador",
+  title: "Contacto",
   description:
     "Contáctanos por WhatsApp, email o redes sociales. KO Boxing Club, Cuenca Ecuador. Reserva tu primera clase hoy.",
+  openGraph: {
+    title: "Contacto | KO Boxing Club",
+    description:
+      "Contáctanos por WhatsApp o redes sociales. Reserva tu primera clase en KO Boxing Club, Cuenca Ecuador.",
+    url: "/contacto",
+  },
 };
 
 export default function ContactoPage() {
