@@ -11,6 +11,11 @@ enum UserRole {
   ADMIN
 }
 
+enum Status {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -20,4 +25,78 @@ model User {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  fighters    Fighter[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Fighter {
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  slug        String    @unique
+  photoKey    String?
+  photoUrl    String?
+  wins        Int       @default(0)
+  losses      Int       @default(0)
+  draws       Int       @default(0)
+  winsKo      Int       @default(0)
+  lossesKo    Int       @default(0)
+  rounds      Int       @default(0)
+  debut       DateTime?
+  birthDate   DateTime?
+  cedula      String?
+  nationality String?
+  residence   String?
+  club        String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  status      Status    @default(DRAFT)
+  events      EventFighter[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  date        DateTime
+  venue       String?
+  city        String?
+  country     String?   @default("Colombia")
+  posterKey   String?
+  posterUrl   String?
+  status      Status    @default(DRAFT)
+  fighters    EventFighter[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([date])
+}
+
+model EventFighter {
+  id         String   @id @default(cuid())
+  eventId    String
+  fighterId  String
+  order      Int      @default(0)
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  fighter    Fighter  @relation(fields: [fighterId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([eventId, fighterId])
+  @@index([eventId])
+  @@index([fighterId])
 }
