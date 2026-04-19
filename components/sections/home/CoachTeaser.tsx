@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -62,17 +63,14 @@ export default function CoachTeaser() {
       <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="ct-photo order-2 lg:order-1">
-            <div className="relative aspect-[4/5] max-w-sm mx-auto lg:max-w-none rounded-2xl overflow-hidden bg-neutral-800">
-              <div className="absolute inset-0 flex items-center justify-center flex-col gap-3">
-                <div className="w-24 h-24 rounded-full bg-neutral-700 flex items-center justify-center">
-                  <span className="text-4xl font-bold text-neutral-500">
-                    FP
-                  </span>
-                </div>
-                <span className="text-xs text-neutral-600 tracking-wider uppercase">
-                  Foto próximamente
-                </span>
-              </div>
+            <div className="relative aspect-4/5 max-w-sm mx-auto lg:max-w-none rounded-2xl overflow-hidden bg-neutral-800">
+              <Image
+                src="/images/gallery/image-2.jpg"
+                alt="Fernando Palomeque — KO Boxing Club"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 1024px) 384px, 50vw"
+              />
               <div className="absolute inset-x-0 bottom-0 p-5 bg-linear-to-t from-black to-transparent">
                 <p className="font-bold text-white text-lg">
                   Fernando Palomeque
