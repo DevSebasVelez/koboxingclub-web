@@ -78,6 +78,7 @@ export async function createBout(input: BoutInput) {
   });
 
   revalidatePath(`/admin/events/${data.eventId}`);
+  revalidatePath("/eventos", "layout");
   return bout;
 }
 
@@ -103,6 +104,7 @@ export async function updateBout(id: string, input: BoutInput) {
   });
 
   revalidatePath(`/admin/events/${data.eventId}`);
+  revalidatePath("/eventos", "layout");
   return bout;
 }
 
@@ -110,6 +112,7 @@ export async function deleteBout(id: string, eventId: string) {
   await requireAuth();
   await prisma.bout.delete({ where: { id } });
   revalidatePath(`/admin/events/${eventId}`);
+  revalidatePath("/eventos", "layout");
 }
 
 export async function updateBoutResult(
@@ -207,5 +210,7 @@ export async function updateBoutResult(
 
   revalidatePath(`/admin/events/${eventId}`);
   revalidatePath("/admin/fighters");
+  revalidatePath("/eventos", "layout");
+  revalidatePath("/peleadores", "layout");
   return bout;
 }

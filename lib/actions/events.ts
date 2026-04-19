@@ -52,13 +52,14 @@ export async function createEvent(input: EventInput) {
       date: new Date(data.date),
       venue: data.venue || null,
       city: data.city || null,
-      country: data.country || "Colombia",
+      country: data.country || "Ecuador",
       posterUrl: data.posterUrl || null,
       posterKey: data.posterKey || null,
       status: data.status,
     },
   });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
   return event;
 }
 
@@ -74,13 +75,14 @@ export async function updateEvent(id: string, input: EventInput) {
       date: new Date(data.date),
       venue: data.venue || null,
       city: data.city || null,
-      country: data.country || "Colombia",
+      country: data.country || "Ecuador",
       posterUrl: data.posterUrl || null,
       posterKey: data.posterKey || null,
       status: data.status,
     },
   });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
   return event;
 }
 
@@ -93,6 +95,7 @@ export async function toggleEventStatus(id: string) {
     data: { status: event.status === "DRAFT" ? "PUBLISHED" : "DRAFT" },
   });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
   return updated;
 }
 
@@ -109,6 +112,7 @@ export async function deleteEvent(id: string) {
   }
   await prisma.event.delete({ where: { id } });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
 }
 
 export async function addFighterToEvent(eventId: string, fighterId: string) {
@@ -127,6 +131,7 @@ export async function addFighterToEvent(eventId: string, fighterId: string) {
     data: { eventId, fighterId, order: (maxOrder._max.order ?? -1) + 1 },
   });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
 }
 
 export async function removeFighterFromEvent(
@@ -138,4 +143,5 @@ export async function removeFighterFromEvent(
     where: { eventId_fighterId: { eventId, fighterId } },
   });
   revalidatePath("/admin/events");
+  revalidatePath("/eventos", "layout");
 }
