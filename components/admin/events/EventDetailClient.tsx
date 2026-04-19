@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import {
   ArrowLeft,
   CalendarDays,
+  ClipboardCheck,
   MapPin,
   Star,
   Swords,
@@ -40,6 +41,7 @@ import StatusBadge from "../shared/StatusBadge";
 import EventDialog from "./EventDialog";
 import DeleteDialog from "../shared/DeleteDialog";
 import BoutDialog from "../bouts/BoutDialog";
+import BoutResultDialog from "../bouts/BoutResultDialog";
 import {
   addFighterToEvent,
   removeFighterFromEvent,
@@ -88,6 +90,19 @@ interface BoutEntry {
   isMainEvent: boolean;
   scheduledRounds: number;
   description: string | null;
+  resultStatus: "PENDING" | "COMPLETED" | "NO_CONTEST" | "CANCELLED";
+  winnerFighterId: string | null;
+  endMethod:
+    | "KO"
+    | "TKO"
+    | "DECISION"
+    | "SPLIT_DECISION"
+    | "DRAW"
+    | "DQ"
+    | "NO_CONTEST"
+    | null;
+  endRound: number | null;
+  notes: string | null;
   fighter1: BoutFighter;
   fighter2: BoutFighter;
   category: Category | null;
@@ -555,6 +570,23 @@ export default function EventDetailClient({
 
 // ─── BoutCard ────────────────────────────────────────────────────────────────
 
+const RESULT_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pendiente",
+  COMPLETED: "Completada",
+  NO_CONTEST: "Sin Contestar",
+  CANCELLED: "Cancelada",
+};
+
+const END_METHOD_SHORT: Record<string, string> = {
+  KO: "KO",
+  TKO: "TKO",
+  DECISION: "Decisión",
+  SPLIT_DECISION: "Dec. Dividida",
+  DRAW: "Empate",
+  DQ: "Descalificación",
+  NO_CONTEST: "Sin Contestar",
+};
+
 interface BoutCardProps {
   bout: BoutEntry;
   number: number;
@@ -572,6 +604,28 @@ function BoutCard({
   onUpdated,
   onDeleted,
 }: BoutCardProps) {
+  const isCompleted = bout.resultStatus === "COMPLETED";
+  const hasResult = bout.resultStatus !== "PENDING";
+
+  const winnerName =
+    isCompleted && bout.winnerFighterId
+      ? bout.winnerFighterId === bout.fighter1Id
+        ? `${bout.fighter1.firstName} ${bout.fighter1.lastName}`
+        : `${bout.fighter2.firstName} ${bout.fighter2.lastName}`
+      : null;
+
+  const resultSummary = isCompleted
+    ? [
+        winnerName ? `Gana ${winnerName}` : "Empate",
+        bout.endMethod ? END_METHOD_SHORT[bout.endMethod] : null,
+        bout.endRound ? `R${bout.endRound}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : hasResult
+      ? RESULT_STATUS_LABELS[bout.resultStatus]
+      : null;
+
   return (
     <div
       className={`rounded-lg border px-4 py-3 ${
@@ -595,7 +649,15 @@ function BoutCard({
           {/* Fighter 1 */}
           <div className="flex flex-1 items-center gap-2 min-w-0 justify-end">
             <div className="text-right min-w-0">
-              <p className="text-sm font-semibold text-white truncate">
+              <p
+                className={`text-sm font-semibold truncate ${
+                  isCompleted && bout.winnerFighterId === bout.fighter1Id
+                    ? "text-emerald-400"
+                    : isCompleted && bout.winnerFighterId !== null
+                      ? "text-neutral-500"
+                      : "text-white"
+                }`}
+              >
                 {bout.fighter1.firstName} {bout.fighter1.lastName}
               </p>
               <p className="text-xs text-neutral-500">
@@ -616,7 +678,7 @@ function BoutCard({
             </Avatar>
           </div>
 
-          {/* VS */}
+          {/* VS / result center */}
           <div className="flex shrink-0 flex-col items-center gap-0.5">
             <span className="text-xs font-bold text-neutral-500">VS</span>
             <span className="text-xs text-neutral-600">
@@ -634,7 +696,15 @@ function BoutCard({
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate">
+              <p
+                className={`text-sm font-semibold truncate ${
+                  isCompleted && bout.winnerFighterId === bout.fighter2Id
+                    ? "text-emerald-400"
+                    : isCompleted && bout.winnerFighterId !== null
+                      ? "text-neutral-500"
+                      : "text-white"
+                }`}
+              >
                 {bout.fighter2.firstName} {bout.fighter2.lastName}
               </p>
               <p className="text-xs text-neutral-500">
@@ -661,6 +731,35 @@ function BoutCard({
               Estelar
             </span>
           )}
+          <BoutResultDialog
+            boutId={bout.id}
+            eventId={bout.eventId}
+            fighter1={bout.fighter1}
+            fighter2={bout.fighter2}
+            scheduledRounds={bout.scheduledRounds}
+            currentResult={{
+              resultStatus: bout.resultStatus,
+              winnerFighterId: bout.winnerFighterId,
+              endMethod: bout.endMethod,
+              endRound: bout.endRound,
+              notes: bout.notes,
+            }}
+            onSuccess={onUpdated}
+            trigger={
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className={
+                  isCompleted
+                    ? "text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10"
+                    : "text-neutral-400 hover:text-white hover:bg-neutral-700"
+                }
+                title="Registrar resultado"
+              >
+                <ClipboardCheck className="size-3.5" />
+              </Button>
+            }
+          />
           <BoutDialog
             eventId={bout.eventId}
             eventFighters={eventFighters}
@@ -694,10 +793,28 @@ function BoutCard({
         </div>
       </div>
 
-      {bout.description && (
-        <p className="mt-1.5 ml-9 text-xs text-neutral-500 italic">
-          {bout.description}
-        </p>
+      {(bout.description || resultSummary) && (
+        <div className="mt-1.5 ml-9 flex flex-wrap items-center gap-2">
+          {bout.description && (
+            <p className="text-xs text-neutral-500 italic">
+              {bout.description}
+            </p>
+          )}
+          {resultSummary && (
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+                isCompleted
+                  ? "bg-emerald-400/10 text-emerald-400"
+                  : bout.resultStatus === "CANCELLED"
+                    ? "bg-neutral-700/50 text-neutral-400"
+                    : "bg-amber-400/10 text-amber-400"
+              }`}
+            >
+              <ClipboardCheck className="size-3" />
+              {resultSummary}
+            </span>
+          )}
+        </div>
       )}
     </div>
   );

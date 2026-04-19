@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db/prisma";
 import { boutSchema, type BoutInput } from "@/lib/validations/bout";
+import {
+  boutResultSchema,
+  type BoutResultInput,
+} from "@/lib/validations/bout-result";
 import { auth } from "@/lib/auth";
 
 async function requireAuth() {
@@ -106,4 +110,102 @@ export async function deleteBout(id: string, eventId: string) {
   await requireAuth();
   await prisma.bout.delete({ where: { id } });
   revalidatePath(`/admin/events/${eventId}`);
+}
+
+export async function updateBoutResult(
+  id: string,
+  eventId: string,
+  input: BoutResultInput,
+) {
+  await requireAuth();
+  const data = boutResultSchema.parse(input);
+
+  const newWinnerId =
+    data.resultStatus === "COMPLETED" && data.winnerFighterId
+      ? data.winnerFighterId
+      : null;
+  const newEndMethod =
+    data.resultStatus === "COMPLETED" ? (data.endMethod ?? null) : null;
+
+  const bout = await prisma.$transaction(async (tx) => {
+    const current = await tx.bout.findUniqueOrThrow({ where: { id } });
+
+    // Reverse stats from previous completed result
+    if (current.resultStatus === "COMPLETED") {
+      const prevIsKo =
+        current.endMethod === "KO" || current.endMethod === "TKO";
+      if (current.winnerFighterId) {
+        const prevLoserId =
+          current.winnerFighterId === current.fighter1Id
+            ? current.fighter2Id
+            : current.fighter1Id;
+        await tx.fighter.update({
+          where: { id: current.winnerFighterId },
+          data: {
+            wins: { decrement: 1 },
+            ...(prevIsKo ? { winsKo: { decrement: 1 } } : {}),
+          },
+        });
+        await tx.fighter.update({
+          where: { id: prevLoserId },
+          data: {
+            losses: { decrement: 1 },
+            ...(prevIsKo ? { lossesKo: { decrement: 1 } } : {}),
+          },
+        });
+      } else {
+        await tx.fighter.updateMany({
+          where: { id: { in: [current.fighter1Id, current.fighter2Id] } },
+          data: { draws: { decrement: 1 } },
+        });
+      }
+    }
+
+    // Apply stats for new completed result
+    if (data.resultStatus === "COMPLETED") {
+      const newIsKo = newEndMethod === "KO" || newEndMethod === "TKO";
+      if (newWinnerId) {
+        const newLoserId =
+          newWinnerId === current.fighter1Id
+            ? current.fighter2Id
+            : current.fighter1Id;
+        await tx.fighter.update({
+          where: { id: newWinnerId },
+          data: {
+            wins: { increment: 1 },
+            ...(newIsKo ? { winsKo: { increment: 1 } } : {}),
+          },
+        });
+        await tx.fighter.update({
+          where: { id: newLoserId },
+          data: {
+            losses: { increment: 1 },
+            ...(newIsKo ? { lossesKo: { increment: 1 } } : {}),
+          },
+        });
+      } else {
+        await tx.fighter.updateMany({
+          where: { id: { in: [current.fighter1Id, current.fighter2Id] } },
+          data: { draws: { increment: 1 } },
+        });
+      }
+    }
+
+    return tx.bout.update({
+      where: { id },
+      data: {
+        resultStatus: data.resultStatus,
+        winnerFighterId: newWinnerId,
+        endMethod: newEndMethod,
+        endRound:
+          data.resultStatus === "COMPLETED" ? (data.endRound ?? null) : null,
+        notes: data.notes || null,
+      },
+      include: boutInclude,
+    });
+  });
+
+  revalidatePath(`/admin/events/${eventId}`);
+  revalidatePath("/admin/fighters");
+  return bout;
 }

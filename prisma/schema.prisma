@@ -16,6 +16,23 @@ enum Status {
   PUBLISHED
 }
 
+enum BoutResult {
+  PENDING
+  COMPLETED
+  NO_CONTEST
+  CANCELLED
+}
+
+enum EndMethod {
+  KO
+  TKO
+  DECISION
+  SPLIT_DECISION
+  DRAW
+  DQ
+  NO_CONTEST
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -115,12 +132,17 @@ model Bout {
   fighter2        Fighter   @relation("Fighter2Bouts", fields: [fighter2Id], references: [id])
   categoryId      String?
   category        Category? @relation(fields: [categoryId], references: [id])
-  order           Int       @default(0)
-  isMainEvent     Boolean   @default(false)
-  scheduledRounds Int       @default(3)
+  order           Int        @default(0)
+  isMainEvent     Boolean    @default(false)
+  scheduledRounds Int        @default(3)
   description     String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  resultStatus    BoutResult @default(PENDING)
+  winnerFighterId String?
+  endMethod       EndMethod?
+  endRound        Int?
+  notes           String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
   @@index([eventId])
   @@index([fighter1Id])
