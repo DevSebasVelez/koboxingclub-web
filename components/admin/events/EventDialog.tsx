@@ -68,7 +68,7 @@ export default function EventDialog({
     date: toDatetimeLocal(event?.date),
     venue: event?.venue ?? "",
     city: event?.city ?? "",
-    country: event?.country ?? "Colombia",
+    country: event?.country ?? "Ecuador",
     posterUrl: event?.posterUrl ?? "",
     posterKey: event?.posterKey ?? "",
     status: event?.status ?? "DRAFT",
@@ -193,7 +193,7 @@ export default function EventDialog({
               <Input
                 id="city"
                 {...register("city")}
-                placeholder="Bogotá"
+                placeholder="Cuenca"
                 className="bg-neutral-800 border-neutral-700 text-white placeholder:text-neutral-500 focus-visible:border-[#c11737]"
               />
             </div>
@@ -207,7 +207,7 @@ export default function EventDialog({
               <Input
                 id="country"
                 {...register("country")}
-                placeholder="Colombia"
+                placeholder="Ecuador"
                 className="bg-neutral-800 border-neutral-700 text-white placeholder:text-neutral-500 focus-visible:border-[#c11737]"
               />
             </div>

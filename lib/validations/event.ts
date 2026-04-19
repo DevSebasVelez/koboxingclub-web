@@ -6,7 +6,7 @@ export const eventSchema = z.object({
   date: z.string().min(1, "La fecha es requerida"),
   venue: z.string().max(200).optional().or(z.literal("")),
   city: z.string().max(100).optional().or(z.literal("")),
-  country: z.string().max(100).default("Colombia"),
+  country: z.string().max(100).default("Ecuador"),
   posterUrl: z.string().url().optional().or(z.literal("")),
   posterKey: z.string().optional().or(z.literal("")),
   status: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT"),

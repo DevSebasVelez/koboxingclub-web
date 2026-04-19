@@ -250,7 +250,7 @@ export default function FighterDialog({
                   <Input
                     id="nationality"
                     {...register("nationality")}
-                    placeholder="Colombiano"
+                    placeholder="Ecuatoriano"
                     className="bg-neutral-800 border-neutral-700 text-white placeholder:text-neutral-500 focus-visible:border-[#c11737]"
                   />
                 </div>
@@ -261,7 +261,7 @@ export default function FighterDialog({
                   <Input
                     id="residence"
                     {...register("residence")}
-                    placeholder="Bogotá, Colombia"
+                    placeholder="Cuenca, Ecuador"
                     className="bg-neutral-800 border-neutral-700 text-white placeholder:text-neutral-500 focus-visible:border-[#c11737]"
                   />
                 </div>
