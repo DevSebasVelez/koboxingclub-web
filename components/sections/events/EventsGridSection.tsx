@@ -112,17 +112,27 @@ export default function EventsGridSection({ events }: { events: EventItem[] }) {
 
   useGSAP(
     () => {
-      gsap.from(".ev-card", {
-        autoAlpha: 0,
-        y: 32,
-        duration: 0.65,
-        stagger: 0.09,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
+      const cards = gsap.utils.toArray<HTMLElement>(
+        ".ev-card",
+        sectionRef.current,
+      );
+      if (!cards.length) return;
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 32 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.65,
+          stagger: 0.09,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            once: true,
+          },
         },
-      });
+      );
     },
     { scope: sectionRef },
   );

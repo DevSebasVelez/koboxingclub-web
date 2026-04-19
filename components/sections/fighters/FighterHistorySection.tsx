@@ -76,21 +76,48 @@ export default function FighterHistorySection({
 
   useGSAP(
     () => {
-      gsap.from(".hist-title", {
-        autoAlpha: 0,
-        y: 20,
-        duration: 0.55,
-        ease: "power3.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 85%" },
-      });
-      gsap.from(".hist-row", {
-        autoAlpha: 0,
-        x: -16,
-        duration: 0.45,
-        stagger: 0.04,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".hist-row", start: "top 90%" },
-      });
+      const title = gsap.utils.toArray<HTMLElement>(
+        ".hist-title",
+        sectionRef.current,
+      );
+      if (title.length) {
+        gsap.fromTo(
+          title,
+          { autoAlpha: 0, y: 20 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top bottom",
+              once: true,
+            },
+          },
+        );
+      }
+      const rows = gsap.utils.toArray<HTMLElement>(
+        ".hist-row",
+        sectionRef.current,
+      );
+      if (!rows.length) return;
+      gsap.fromTo(
+        rows,
+        { autoAlpha: 0, x: -16 },
+        {
+          autoAlpha: 1,
+          x: 0,
+          duration: 0.45,
+          stagger: 0.04,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            once: true,
+          },
+        },
+      );
     },
     { scope: sectionRef },
   );

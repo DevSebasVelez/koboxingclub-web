@@ -114,21 +114,48 @@ export default function FightersGridSection({
 
   useGSAP(
     () => {
-      gsap.from(".fighters-search-bar", {
-        autoAlpha: 0,
-        y: 20,
-        duration: 0.55,
-        ease: "power3.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 85%" },
-      });
-      gsap.from(".fighter-card", {
-        autoAlpha: 0,
-        y: 24,
-        duration: 0.5,
-        stagger: 0.06,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".fighter-card", start: "top 90%" },
-      });
+      const searchBar = gsap.utils.toArray<HTMLElement>(
+        ".fighters-search-bar",
+        sectionRef.current,
+      );
+      if (searchBar.length) {
+        gsap.fromTo(
+          searchBar,
+          { autoAlpha: 0, y: 20 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top bottom",
+              once: true,
+            },
+          },
+        );
+      }
+      const cards = gsap.utils.toArray<HTMLElement>(
+        ".fighter-card",
+        sectionRef.current,
+      );
+      if (!cards.length) return;
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 24 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.06,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            once: true,
+          },
+        },
+      );
     },
     { scope: sectionRef },
   );

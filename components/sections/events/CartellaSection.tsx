@@ -244,17 +244,27 @@ export default function CartellaSection({ bouts }: { bouts: Bout[] }) {
 
   useGSAP(
     () => {
-      gsap.from(".bout-card", {
-        autoAlpha: 0,
-        y: 28,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
+      const cards = gsap.utils.toArray<HTMLElement>(
+        ".bout-card",
+        sectionRef.current,
+      );
+      if (!cards.length) return;
+      gsap.fromTo(
+        cards,
+        { autoAlpha: 0, y: 28 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            once: true,
+          },
         },
-      });
+      );
     },
     { scope: sectionRef },
   );
