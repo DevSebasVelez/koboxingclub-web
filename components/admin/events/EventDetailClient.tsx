@@ -42,6 +42,7 @@ import EventDialog from "./EventDialog";
 import DeleteDialog from "../shared/DeleteDialog";
 import BoutDialog from "../bouts/BoutDialog";
 import BoutResultDialog from "../bouts/BoutResultDialog";
+import { ImageViewer } from "../shared/ImageViewer";
 import {
   addFighterToEvent,
   removeFighterFromEvent,
@@ -256,15 +257,22 @@ export default function EventDetailClient({
       <div className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden">
         <div className="flex gap-4 p-5">
           {event.posterUrl ? (
-            <div className="relative h-28 w-20 shrink-0 overflow-hidden rounded-lg">
-              <Image
-                src={event.posterUrl}
-                alt={event.name}
-                fill
-                className="object-cover"
-                sizes="80px"
-              />
-            </div>
+            <ImageViewer
+              src={event.posterUrl}
+              alt={event.name}
+              rounded="rounded-lg"
+              trigger={
+                <div className="relative h-28 w-20 overflow-hidden rounded-lg">
+                  <Image
+                    src={event.posterUrl}
+                    alt={event.name}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </div>
+              }
+            />
           ) : (
             <div className="flex h-28 w-20 shrink-0 items-center justify-center rounded-lg bg-neutral-800">
               <CalendarDays className="size-8 text-neutral-600" />

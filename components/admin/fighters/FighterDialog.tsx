@@ -24,6 +24,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import ImageUpload from "../shared/ImageUpload";
+import { DatePicker } from "../shared/DatePicker";
 import { createFighter, updateFighter } from "@/lib/actions/fighters";
 import type { FighterInput } from "@/lib/validations/fighter";
 
@@ -213,14 +214,19 @@ export default function FighterDialog({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <Label className="text-neutral-300" htmlFor="birthDate">
+                  <Label className="text-neutral-300">
                     Fecha de nacimiento
                   </Label>
-                  <input
-                    id="birthDate"
-                    type="date"
-                    {...register("birthDate")}
-                    className="flex h-8 w-full rounded-lg border border-neutral-700 bg-neutral-800 px-2.5 py-1 text-sm text-white outline-none focus:border-[#c11737] transition-colors"
+                  <Controller
+                    name="birthDate"
+                    control={control}
+                    render={({ field }) => (
+                      <DatePicker
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        placeholder="Seleccionar fecha"
+                      />
+                    )}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -421,14 +427,17 @@ export default function FighterDialog({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label className="text-neutral-300" htmlFor="debut">
-                  Debut profesional
-                </Label>
-                <input
-                  id="debut"
-                  type="date"
-                  {...register("debut")}
-                  className="flex h-8 w-full rounded-lg border border-neutral-700 bg-neutral-800 px-2.5 py-1 text-sm text-white outline-none focus:border-[#c11737] transition-colors"
+                <Label className="text-neutral-300">Debut profesional</Label>
+                <Controller
+                  name="debut"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder="Seleccionar fecha"
+                    />
+                  )}
                 />
               </div>
             </TabsContent>

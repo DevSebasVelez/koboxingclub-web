@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import ImageUpload from "../shared/ImageUpload";
+import { DateTimePicker } from "../shared/DateTimePicker";
 import { createEvent, updateEvent } from "@/lib/actions/events";
 import type { EventInput } from "@/lib/validations/event";
 
@@ -153,14 +154,20 @@ export default function EventDialog({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label className="text-neutral-300" htmlFor="date">
+            <Label className="text-neutral-300">
               Fecha y hora <span className="text-red-400">*</span>
             </Label>
-            <input
-              id="date"
-              type="datetime-local"
-              {...register("date", { required: "La fecha es requerida" })}
-              className="flex h-8 w-full rounded-lg border border-neutral-700 bg-neutral-800 px-2.5 py-1 text-sm text-white outline-none focus:border-[#c11737] transition-colors"
+            <Controller
+              name="date"
+              control={control}
+              rules={{ required: "La fecha es requerida" }}
+              render={({ field }) => (
+                <DateTimePicker
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  placeholder="Seleccionar fecha y hora"
+                />
+              )}
             />
             {errors.date && (
               <p className="text-xs text-red-400">{errors.date.message}</p>

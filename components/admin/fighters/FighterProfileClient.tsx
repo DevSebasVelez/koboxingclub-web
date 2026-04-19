@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StatusBadge from "../shared/StatusBadge";
 import FighterDialog from "./FighterDialog";
+import { ImageViewer } from "../shared/ImageViewer";
 import { toggleFighterStatus } from "@/lib/actions/fighters";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -218,15 +219,22 @@ export default function FighterProfileClient({
           {/* Photo */}
           <div className="relative shrink-0">
             {fighter.photoUrl ? (
-              <div className="relative h-28 w-24 overflow-hidden rounded-xl">
-                <Image
-                  src={fighter.photoUrl}
-                  alt={`${fighter.firstName} ${fighter.lastName}`}
-                  fill
-                  className="object-cover"
-                  sizes="96px"
-                />
-              </div>
+              <ImageViewer
+                src={fighter.photoUrl}
+                alt={`${fighter.firstName} ${fighter.lastName}`}
+                rounded="rounded-xl"
+                trigger={
+                  <div className="relative h-28 w-24 overflow-hidden rounded-xl">
+                    <Image
+                      src={fighter.photoUrl}
+                      alt={`${fighter.firstName} ${fighter.lastName}`}
+                      fill
+                      className="object-cover"
+                      sizes="96px"
+                    />
+                  </div>
+                }
+              />
             ) : (
               <div className="flex h-28 w-24 items-center justify-center rounded-xl bg-neutral-800">
                 <User className="size-10 text-neutral-600" />

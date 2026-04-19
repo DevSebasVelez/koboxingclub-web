@@ -164,10 +164,15 @@ export default function EventsClient({ initialEvents }: EventsClientProps) {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div>
-                      <p className="font-medium text-white">{event.name}</p>
+                    <Link
+                      href={`/admin/events/${event.id}`}
+                      className="group/name block"
+                    >
+                      <p className="font-medium text-white group-hover/name:text-[#c11737] transition-colors">
+                        {event.name}
+                      </p>
                       <p className="text-xs text-neutral-500">{event.slug}</p>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-neutral-400 text-sm">
                     {format(new Date(event.date), "d MMM yyyy, HH:mm", {

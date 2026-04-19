@@ -181,7 +181,10 @@ export default function FightersClient({
                   className="border-neutral-800 hover:bg-neutral-800/50 transition-colors"
                 >
                   <TableCell>
-                    <div className="flex items-center gap-3">
+                    <Link
+                      href={`/admin/fighters/${fighter.id}`}
+                      className="flex items-center gap-3 group/name"
+                    >
                       <Avatar size="default">
                         <AvatarImage
                           src={fighter.photoUrl ?? undefined}
@@ -193,14 +196,14 @@ export default function FightersClient({
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-white group-hover/name:text-[#c11737] transition-colors">
                           {fighter.firstName} {fighter.lastName}
                         </p>
                         <p className="text-xs text-neutral-500">
                           {fighter.slug}
                         </p>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-neutral-400">
                     {fighter.category?.name ?? (
