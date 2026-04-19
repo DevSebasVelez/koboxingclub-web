@@ -33,70 +33,96 @@ model Category {
   slug        String    @unique
   description String?
   fighters    Fighter[]
+  bouts       Bout[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
 model Fighter {
-  id          String    @id @default(cuid())
-  firstName   String
-  lastName    String
-  slug        String    @unique
-  photoKey    String?
-  photoUrl    String?
-  wins        Int       @default(0)
-  losses      Int       @default(0)
-  draws       Int       @default(0)
-  winsKo      Int       @default(0)
-  lossesKo    Int       @default(0)
-  rounds      Int       @default(0)
-  debut       DateTime?
-  birthDate   DateTime?
-  cedula      String?
-  nationality String?
-  residence   String?
-  club        String?
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  status      Status    @default(DRAFT)
-  events      EventFighter[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            String         @id @default(cuid())
+  firstName     String
+  lastName      String
+  slug          String         @unique
+  photoKey      String?
+  photoUrl      String?
+  wins          Int            @default(0)
+  losses        Int            @default(0)
+  draws         Int            @default(0)
+  winsKo        Int            @default(0)
+  lossesKo      Int            @default(0)
+  rounds        Int            @default(0)
+  debut         DateTime?
+  birthDate     DateTime?
+  cedula        String?
+  nationality   String?
+  residence     String?
+  club          String?
+  categoryId    String?
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  status        Status         @default(DRAFT)
+  events        EventFighter[]
+  boutsFighter1 Bout[]         @relation("Fighter1Bouts")
+  boutsFighter2 Bout[]         @relation("Fighter2Bouts")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([categoryId])
   @@index([status])
 }
 
 model Event {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
-  slug        String    @unique
+  slug        String         @unique
   description String?
   date        DateTime
   venue       String?
   city        String?
-  country     String?   @default("Colombia")
+  country     String?        @default("Colombia")
   posterKey   String?
   posterUrl   String?
-  status      Status    @default(DRAFT)
+  status      Status         @default(DRAFT)
   fighters    EventFighter[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  bouts       Bout[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
   @@index([status])
   @@index([date])
 }
 
 model EventFighter {
-  id         String   @id @default(cuid())
-  eventId    String
-  fighterId  String
-  order      Int      @default(0)
-  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  fighter    Fighter  @relation(fields: [fighterId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  eventId   String
+  fighterId String
+  order     Int      @default(0)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  fighter   Fighter  @relation(fields: [fighterId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   @@unique([eventId, fighterId])
   @@index([eventId])
   @@index([fighterId])
+}
+
+model Bout {
+  id              String    @id @default(cuid())
+  eventId         String
+  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  fighter1Id      String
+  fighter1        Fighter   @relation("Fighter1Bouts", fields: [fighter1Id], references: [id])
+  fighter2Id      String
+  fighter2        Fighter   @relation("Fighter2Bouts", fields: [fighter2Id], references: [id])
+  categoryId      String?
+  category        Category? @relation(fields: [categoryId], references: [id])
+  order           Int       @default(0)
+  isMainEvent     Boolean   @default(false)
+  scheduledRounds Int       @default(3)
+  description     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([eventId])
+  @@index([fighter1Id])
+  @@index([fighter2Id])
 }

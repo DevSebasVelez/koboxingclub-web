@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
-import { Pencil, Trash2, Users, ToggleLeft, ToggleRight } from "lucide-react";
+import {
+  ExternalLink,
+  Pencil,
+  Trash2,
+  Users,
+  ToggleLeft,
+  ToggleRight,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -266,6 +274,16 @@ export default function FightersClient({
                           </Button>
                         }
                       />
+                      <Link href={`/admin/fighters/${fighter.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="text-neutral-400 hover:text-white hover:bg-neutral-700"
+                          title="Ver perfil"
+                        >
+                          <ExternalLink className="size-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </TableCell>
                 </TableRow>

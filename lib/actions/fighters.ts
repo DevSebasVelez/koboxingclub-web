@@ -32,6 +32,57 @@ export async function getFighterById(id: string) {
   });
 }
 
+export async function getFighterProfile(id: string) {
+  return prisma.fighter.findUnique({
+    where: { id },
+    include: {
+      category: true,
+      events: {
+        include: { event: true },
+        orderBy: { event: { date: "desc" } },
+      },
+      boutsFighter1: {
+        include: {
+          event: true,
+          fighter2: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              photoUrl: true,
+              wins: true,
+              losses: true,
+              draws: true,
+              winsKo: true,
+            },
+          },
+          category: { select: { id: true, name: true } },
+        },
+        orderBy: { event: { date: "asc" } },
+      },
+      boutsFighter2: {
+        include: {
+          event: true,
+          fighter1: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              photoUrl: true,
+              wins: true,
+              losses: true,
+              draws: true,
+              winsKo: true,
+            },
+          },
+          category: { select: { id: true, name: true } },
+        },
+        orderBy: { event: { date: "asc" } },
+      },
+    },
+  });
+}
+
 function buildSlug(firstName: string, lastName: string) {
   return slugify(`${firstName} ${lastName}`);
 }
