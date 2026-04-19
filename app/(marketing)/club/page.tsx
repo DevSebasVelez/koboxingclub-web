@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ClubHero from "@/components/sections/club/ClubHero";
 import ClubStory from "@/components/sections/club/ClubStory";
+import ClubGallery from "@/components/sections/club/ClubGallery";
 import FernandoSection from "@/components/sections/club/FernandoSection";
 import ClubCTA from "@/components/sections/club/ClubCTA";
 
@@ -15,6 +16,7 @@ export default function ClubPage() {
     <>
       <ClubHero />
       <ClubStory />
+      <ClubGallery />
       <FernandoSection />
       <ClubCTA />
     </>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -163,21 +164,14 @@ export default function FernandoSection() {
 
           <div className="fp-photo order-first lg:order-last">
             <div className="relative aspect-3/4 max-w-xs mx-auto lg:max-w-none rounded-2xl overflow-hidden bg-neutral-800 border border-white/8">
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="w-28 h-28 rounded-full bg-neutral-700 border-2 border-ko-red/30 flex items-center justify-center">
-                  <span className="text-5xl font-bold text-neutral-500">
-                    FP
-                  </span>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-sm font-semibold text-neutral-400">
-                    Fernando Palomeque
-                  </p>
-                  <p className="text-xs text-neutral-600 tracking-wider uppercase">
-                    Foto próximamente
-                  </p>
-                </div>
-              </div>
+              <Image
+                src="/images/gallery/image-2.jpg"
+                alt="Fernando Palomeque — KO Boxing Club"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 1024px) 320px, 50vw"
+                priority
+              />
 
               <div className="absolute inset-x-0 bottom-0 p-6 bg-linear-to-t from-black to-transparent">
                 <div className="flex items-center gap-2 mb-2">
