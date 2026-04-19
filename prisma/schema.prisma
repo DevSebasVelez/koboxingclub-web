@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -124,15 +123,15 @@ model EventFighter {
 }
 
 model Bout {
-  id              String    @id @default(cuid())
+  id              String     @id @default(cuid())
   eventId         String
-  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event           Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   fighter1Id      String
-  fighter1        Fighter   @relation("Fighter1Bouts", fields: [fighter1Id], references: [id])
+  fighter1        Fighter    @relation("Fighter1Bouts", fields: [fighter1Id], references: [id])
   fighter2Id      String
-  fighter2        Fighter   @relation("Fighter2Bouts", fields: [fighter2Id], references: [id])
+  fighter2        Fighter    @relation("Fighter2Bouts", fields: [fighter2Id], references: [id])
   categoryId      String?
-  category        Category? @relation(fields: [categoryId], references: [id])
+  category        Category?  @relation(fields: [categoryId], references: [id])
   order           Int        @default(0)
   isMainEvent     Boolean    @default(false)
   scheduledRounds Int        @default(3)
