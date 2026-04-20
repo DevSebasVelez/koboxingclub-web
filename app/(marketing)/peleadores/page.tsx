@@ -3,8 +3,6 @@ import { getPublishedFighters } from "@/lib/queries/public";
 import FightersHero from "@/components/sections/fighters/FightersHero";
 import FightersGridSection from "@/components/sections/fighters/FightersGridSection";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Peleadores",
   description:

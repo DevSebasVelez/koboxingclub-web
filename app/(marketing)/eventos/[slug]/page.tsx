@@ -4,8 +4,6 @@ import { getPublishedEventBySlug } from "@/lib/queries/public";
 import EventDetailHero from "@/components/sections/events/EventDetailHero";
 import CartellaSection from "@/components/sections/events/CartellaSection";
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   params: Promise<{ slug: string }>;
 }

@@ -122,7 +122,8 @@ export async function createFighter(input: FighterInput) {
     },
   });
   revalidatePath("/admin/fighters");
-  revalidatePath("/peleadores", "layout");
+  revalidatePath("/peleadores");
+  revalidatePath("/peleadores/[slug]", "page");
   return fighter;
 }
 
@@ -154,7 +155,8 @@ export async function updateFighter(id: string, input: FighterInput) {
     },
   });
   revalidatePath("/admin/fighters");
-  revalidatePath("/peleadores", "layout");
+  revalidatePath("/peleadores");
+  revalidatePath("/peleadores/[slug]", "page");
   return fighter;
 }
 
@@ -167,7 +169,8 @@ export async function toggleFighterStatus(id: string) {
     data: { status: fighter.status === "DRAFT" ? "PUBLISHED" : "DRAFT" },
   });
   revalidatePath("/admin/fighters");
-  revalidatePath("/peleadores", "layout");
+  revalidatePath("/peleadores");
+  revalidatePath("/peleadores/[slug]", "page");
   return updated;
 }
 
@@ -184,5 +187,6 @@ export async function deleteFighter(id: string) {
   }
   await prisma.fighter.delete({ where: { id } });
   revalidatePath("/admin/fighters");
-  revalidatePath("/peleadores", "layout");
+  revalidatePath("/peleadores");
+  revalidatePath("/peleadores/[slug]", "page");
 }

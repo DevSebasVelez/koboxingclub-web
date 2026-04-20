@@ -4,8 +4,6 @@ import { getPublishedFighterBySlug } from "@/lib/queries/public";
 import FighterProfileHero from "@/components/sections/fighters/FighterProfileHero";
 import FighterHistorySection from "@/components/sections/fighters/FighterHistorySection";
 
-export const dynamic = "force-dynamic";
-
 type BoutResult = "WIN" | "LOSS" | "DRAW" | "NC" | "PENDING";
 
 interface Props {
