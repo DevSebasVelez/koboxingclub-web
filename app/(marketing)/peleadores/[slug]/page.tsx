@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getPublishedFighterBySlug } from "@/lib/queries/public";
 import FighterProfileHero from "@/components/sections/fighters/FighterProfileHero";
 import FighterHistorySection from "@/components/sections/fighters/FighterHistorySection";
+
+export const dynamic = "force-dynamic";
+
 type BoutResult = "WIN" | "LOSS" | "DRAW" | "NC" | "PENDING";
 
 interface Props {
@@ -47,7 +50,10 @@ function normalizeBouts(
       if (b.winnerFighterId === fighter.id) result = "WIN";
       else if (b.winnerFighterId === opp.id) result = "LOSS";
       else result = "DRAW";
-    } else if (b.resultStatus === "NO_CONTEST" || b.resultStatus === "CANCELLED") {
+    } else if (
+      b.resultStatus === "NO_CONTEST" ||
+      b.resultStatus === "CANCELLED"
+    ) {
       result = "NC";
     }
     return {
@@ -75,7 +81,10 @@ function normalizeBouts(
       if (b.winnerFighterId === fighter.id) result = "WIN";
       else if (b.winnerFighterId === opp.id) result = "LOSS";
       else result = "DRAW";
-    } else if (b.resultStatus === "NO_CONTEST" || b.resultStatus === "CANCELLED") {
+    } else if (
+      b.resultStatus === "NO_CONTEST" ||
+      b.resultStatus === "CANCELLED"
+    ) {
       result = "NC";
     }
     return {

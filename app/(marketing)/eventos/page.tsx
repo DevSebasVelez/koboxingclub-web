@@ -3,6 +3,8 @@ import { getPublishedEvents } from "@/lib/queries/public";
 import EventsHero from "@/components/sections/events/EventsHero";
 import EventsGridSection from "@/components/sections/events/EventsGridSection";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Cartelera de Eventos",
   description:
